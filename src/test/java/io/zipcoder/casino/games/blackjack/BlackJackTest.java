@@ -71,22 +71,21 @@ public class BlackJackTest {
     boolean expected = true;
     Assert.assertEquals(expected, actual);
     }
-    @Test
-    public void testIsHandSplittableFalse(){
-    Card card1 = new Card(Rank.FOUR, Suit.HEARTS);
-    Card card2 = new Card(Rank.NINE, Suit.HEARTS);
-    Integer expected = -1;
-    Integer actual = blackJack.comparable(card1, card2);
-    Assert.assertEquals(expected, actual);
-    }
-    @Test
-    public void testIsHandSplittableTrue(){
-    Card card1 = new Card(Rank.FOUR, Suit.HEARTS);
-    Card card2 = new Card(Rank.FOUR, Suit.SPADES);
-    Integer expected = 0;
-    Integer actual = blackJack.comparable(card1, card2);
-    Assert.assertEquals(expected, actual);
-    }
+//    @Test
+//    public void testIsHandSplittableFalse(){
+//    Card card1 = new Card(Rank.FOUR, Suit.HEARTS);
+//    Card card2 = new Card(Rank.NINE, Suit.HEARTS);
+//    Integer expected = -1;
+//    Integer actual = blackJack.comparable(card1, card2);
+//    Assert.assertEquals(expected, actual);
+//    }
+//    @Test
+//    public void testIsHandSplittableTrue(){
+//
+//    Integer expected = 0;
+//    Integer actual = blackJack.comparable(card1, card2);
+//    Assert.assertEquals(expected, actual);
+//    }
     @Test
     public void testDisplaySplitHand(){
     String search = "of";
