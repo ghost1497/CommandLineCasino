@@ -13,6 +13,7 @@ import java.util.Arrays;
 
 public class BlackJack implements Game {
 
+    private static final String fRULES_PATH = "BlackJack.Rules.txt";
     private Player player;
     static Deck playingDeck;
     static String output;
@@ -40,11 +41,15 @@ public class BlackJack implements Game {
                     " _| |__) || | // | |,| \\__.  | |`\\ \\ | |__' |// | |,| \\__.  | |`\\ \\  \n" +
                     "|_______/[___]\\'-;__/'.___.'[__|  \\_]`.____.'\\'-;__/'.___.'[__|  \\_] \n" +
                     "\n" +
-                    "                  Type start to start the game.\n" +
+                    "                   Press s to start the game.\n" +
+                    "                          Type r for rules     \n" +
                     "                         Type quit to exit\n\n\n";
 
             output = IOHandler.promptForStringWithMessage(intro);
-            if (!output.equalsIgnoreCase(null)) {
+            if (output.equalsIgnoreCase("r")){
+                IOHandler.printMessage(getRules());
+            }
+            if (output.equalsIgnoreCase("s")) {
                 beginGame();
             }
         }
@@ -381,7 +386,8 @@ public class BlackJack implements Game {
     }
     @Override
     public String getRules() {
-        return null;
+        return IOHandler.getMessageFromFile(fRULES_PATH);
+
     }
 }
 //    public void playerDoubleDown(){
