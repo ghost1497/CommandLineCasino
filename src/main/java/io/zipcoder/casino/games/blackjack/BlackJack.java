@@ -33,7 +33,9 @@ public class BlackJack implements Game {
 
     public void welcomeToBlackJack() {
         do {
-            String intro = "\n\n \n                             WELCOME TO: \n" +
+            String intro = "\n   /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =\\\n" +
+                    "  /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =\\" +
+                    "\n\n \n                             WELCOME TO: \n" +
                     " ______   __                 __          _____              __       \n" +
                     "|_   _ \\ [  |               [  |  _     |_   _|            [  |  _   \n" +
                     "  | |_) | | |  ,--.   .---.  | | / ]      | | ,--.   .---.  | | / ]  \n" +
@@ -43,7 +45,9 @@ public class BlackJack implements Game {
                     "\n" +
                     "                   Press s to start the game.\n" +
                     "                          Type r for rules     \n" +
-                    "                         Type quit to exit\n\n\n";
+                    "                         Type quit to exit\n\n\n" +
+                    "  \\= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =/\n" +
+                    "   \\= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =/";
 
             output = IOHandler.promptForStringWithMessage(intro);
             if (output.equalsIgnoreCase("r")){
@@ -99,44 +103,39 @@ public class BlackJack implements Game {
         if ((playerValue.get(0).getRank().equals(Rank.ACE) && playerValue.size() == 2 && getPlayerCardValue() == 11)
             || playerValue.get(1).getRank().equals(Rank.ACE) && playerValue.size() == 2 && getPlayerCardValue() == 11) {
             playerHandScore = 21;
-            System.out.println("BlackJack!");
+            System.out.println(".------..------..------..------..------..------..------..------..------..------.\n" +
+                    "|B.--. ||L.--. ||A.--. ||C.--. ||K.--. ||J.--. ||A.--. ||C.--. ||K.--. ||!.--. |\n" +
+                    "| :(): || :/\\: || (\\/) || :/\\: || :/\\: || :(): || (\\/) || :/\\: || :/\\: || (\\/) |\n" +
+                    "| ()() || (__) || :\\/: || :\\/: || :\\/: || ()() || :\\/: || :\\/: || :\\/: || :\\/: |\n" +
+                    "| '--'B|| '--'L|| '--'A|| '--'C|| '--'K|| '--'J|| '--'A|| '--'C|| '--'K|| '--'!|\n" +
+                    "`------'`------'`------'`------'`------'`------'`------'`------'`------'`------'\n\n");
 
         }
     }
     public void acePropertiesForPlayer() {
         Deck playingDeck = new Deck();
         if (isDealerLessThan21()) {
-            if (playerValue.get(0).getRank().equals(Rank.ACE)) {
+            if (playerValue.get(0).getRank().equals(Rank.ACE) || playerValue.get(1).getRank().equals(Rank.ACE)) {
                 if (getPlayerCardValue() < 11) {
                     playerHandScore = getPlayerCardValue() + 10;
-                    hitCycle(playingDeck);
-
-                }if (getPlayerCardValue() > 11) {
-                    playerHandScore = getPlayerCardValue() + 1;
-                    hitCycle(playingDeck);
-                }
-            }
-            else if (playerValue.get(1).getRank().equals(Rank.ACE)){
-                if (getPlayerCardValue() < 11) {
-                    playerHandScore = getPlayerCardValue() + 10;
-                    hitCycle(playingDeck);
-                } else if (getPlayerCardValue() > 11) {
-                    playerHandScore = getPlayerCardValue() + 1;
-                    hitCycle(playingDeck);
+                    hitCycleAce(playingDeck);
                 }
             }
         }
     }
     public void acePropertiesForDealer() {
-        if (dealerValue.get(0).getRank().equals(Rank.ACE)) {
-            String prompt = "The dealer has an Ace, do you want to put down insurance?\n" +
-                    " Yes or No";
-            output = IOHandler.promptForStringWithMessage(prompt);
-            if (output.equalsIgnoreCase("Yes")) {
-                System.out.println("You put down insurance");
-            }
-            displayDealerHand();
-        }
+/**
+ * Not sure if I will implement this insurance thing yet.
+ */
+//      if (dealerValue.get(0).getRank().equals(Rank.ACE)) {
+//            String prompt = "The dealer has an Ace, do you want to put down insurance?\n" +
+//                    " Yes or No";
+//            output = IOHandler.promptForStringWithMessage(prompt);
+//            if (output.equalsIgnoreCase("Yes")) {
+//                System.out.println("You put down insurance");
+//            }
+//            displayDealerHand();
+//        }
         if(dealerValue.contains(Rank.ACE)){
             dealerHandScore = 11 + dealerValue.get(1).getIntValue();
         }
@@ -193,7 +192,7 @@ public class BlackJack implements Game {
         return 0;
     }
     public void splitHandPrompt() {
-        //while ((playerValue.get(0).getIntValue().equals(playerValue.get(1).getIntValue()))
+        Deck playingDeck = new Deck();
         String prompt = "Your split value is " + playerValue.get(0).getIntValue() + ". Do you want to split?";
             output = IOHandler.promptForStringWithMessage(prompt);
             if (output.equalsIgnoreCase("yes")) {
@@ -211,7 +210,7 @@ public class BlackJack implements Game {
                 }
             }
             if (output.equalsIgnoreCase("no")) {
-                //need splitHit
+                hitCycle(playingDeck);
             }
     }
     public Integer playerLeftHandScore() {
@@ -250,7 +249,7 @@ public class BlackJack implements Game {
             dealerHandScore = getDealerCardValue();
         }
         if (dealerHandScore > 21){
-            System.out.println("The dealer bust at " + dealerHandScore + "!");
+            System.out.println("The dealer busted at " + dealerHandScore + "!");
             System.out.println("You win!");
         }
     }
@@ -283,6 +282,28 @@ public class BlackJack implements Game {
                 ": " + getDealerCardValue());
         winCondition();
     }
+    public void hitCycleAce(Deck playingDeck) {
+        while (playerHandScore < 21) {
+            String prompt = "Do you want to hit or stand?\n";
+            output = IOHandler.promptForStringWithMessage(prompt);
+            if (output.equalsIgnoreCase("hit")) {
+                playerValue.add(playingDeck.pull(1)[0]);
+                playerHandScore = getPlayerCardValue() + 10;
+                System.out.println("You have: " + playerHandScore);
+            }
+            if (output.equalsIgnoreCase("stand")) {
+                playerHandScore = getPlayerCardValue() + 10;
+                break;
+            }
+        }
+        if (playerHandScore > 21) {
+            bust();
+        }
+        System.out.println("You have " + playerHandScore + ", the dealer has" +
+                ": " + getDealerCardValue());
+        winConditionAce();
+    }
+
 
     public void bust() {
         System.out.println("Over 21, you busted! You lost!");
@@ -349,6 +370,19 @@ public class BlackJack implements Game {
         } else if (getPlayerCardValue() <= 21 && getPlayerCardValue() == getDealerCardValue()) {
             System.out.println("You tied");
         } else if (getPlayerCardValue() < getDealerCardValue() && getDealerCardValue() <= 21) {
+            System.out.println("You lost!");
+        }
+    }
+    public void winConditionAce(){
+        if (playerHandScore > getDealerCardValue() && playerHandScore <= 21){
+            System.out.println("You Win!");
+        } else if (playerHandScore == 21 && dealerHandScore !=21){
+            System.out.println("You won with 21!");
+        } else if (playerHandScore < getDealerCardValue() && getDealerCardValue() > 21){
+            System.out.println("You Win!");
+        } else if (playerHandScore <= 21 && playerHandScore == getDealerCardValue()){
+            System.out.println("You tied, sorry.");
+        } else if (playerHandScore < getDealerCardValue() && getDealerCardValue() <= 21){
             System.out.println("You lost!");
         }
     }
